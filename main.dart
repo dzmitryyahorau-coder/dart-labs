@@ -2,6 +2,13 @@
 Написать функции конвертации температуры Цельсий ↔ Фаренгейт.
 */
 
+import 'dart:io';
+import 'dart:math';
+
+import 'logger.dart';
+import 'string-extension.dart';
+import 'student.dart';
+
 double convertCToF(double temp) => temp * 1.8 + 32;
 double convertFToC(double temp) => (temp - 32) / 1.8;
 
@@ -100,7 +107,7 @@ int fibIter(int n) { // O(n) speed / O(1) memory
 Написать валидатор email через RegExp с обработкой edge cases
 */
 bool validateEmail(String email) {
-  var regExp = RegExp(r'^[a-zA-Z0-9_-.]+@[a-zA-Z0-9_-.]+\.{2,}$');
+  var regExp = RegExp(r'^[a-zA-Z0-9_\-\.]+@[a-zA-Z0-9_\-\.]+\.[a-zA-Z]{2,}$');
 
   return regExp.hasMatch(email);
 }
@@ -158,12 +165,78 @@ bool validateBankCardNumber(String num) {
   return sum % 10 == 0;
 }
 
+/*
+Реализовать игру «Угадай число»
+*/
+
+bool Function(int) guessNumber(int start, int end) {
+  if (start > end) throw new Exception('Invalid args: end number must be greater than start number.');
+
+  final guessedNumber = Random().nextInt(end-start + 1) + start;
+  bool isGuessed = false;
+
+  print('Try yo guess my number from $start to $end');
+
+  bool tryGuess(int n) {
+
+    if (n > guessedNumber) {
+      print('Guessed number is less than $n\n');
+    } else if (n < guessedNumber) {
+      print('Guessed number is greater than $n\n');
+    } else {
+      print('You won! Guessed number is $n!');
+      isGuessed = true;
+    }
+
+    return isGuessed;
+  }
+
+  return tryGuess;
+}
+
 void main() {
-  print(workWithStr('Dzmitry', 'Yahorau'));
 
-  print(eratosthenesNums(5));
+  final logger = Logger.create();
 
-  print(fibIter(3));
+  logger.log(workWithStr('Dzmitry', 'Yahorau'));
 
-  print(calculateAge(DateTime(2000, 6, 4)));
+  logger.log(eratosthenesNums(5));
+
+  logger.log(fibIter(3));
+
+  logger.log(calculateAge(DateTime(2000, 6, 4)));
+
+  final tryGuess = guessNumber(1, 100);
+
+  bool isGuessed = true;
+
+  while (!isGuessed) {
+    stdout.write("Enter the number: ");
+
+    final input = stdin.readLineSync();
+
+    final userNumber = int.tryParse(input ?? '');
+
+    if (userNumber == null) {
+      logger.error('Number is wrong. Please, enter the valid integer number;');
+      continue;
+    }
+
+    isGuessed = tryGuess(userNumber);
+  }
+
+  List<Student> students = [
+    const Student('Alex', 4),
+    const Student('Erick', 2),
+    const Student('Dima', 3),
+    const Student('Michael', 1)
+  ];
+
+  students.sort();
+
+  logger.log("Sorted students: $students");
+
+  logger.log('dima'.capitalize() + ' ' + 'дима'.capitalize());
+  logger.log('dmitrii.egorow2014@yandex.ru'.isEmail());
+  logger.log('Hello, world!'.reverse());
 }

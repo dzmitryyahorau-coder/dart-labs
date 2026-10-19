@@ -1,0 +1,7 @@
+name: hotel_booking
+description: Hotel booking system in Dart
+environment:
+  sdk: '^3.0.0'
+
+dev_dependencies:
+  test: ^1.24.0
