@@ -40,11 +40,11 @@ void main() async {
       .where((n) => n % 2 == 0)
       .take(5)
       .map((n) => n * 2)
-      .forEach(print);
+      .listen(print);
 
   await numbers2
       .where((n) => n % 2 == 0)
       .take(5)
       .map((n) => n * 2)
-      .forEach(print);
+      .listen(print);
 }
